@@ -20,7 +20,6 @@ async def get_last_db_update(session: AsyncSession = Depends(get_session)):
     return "OK"
 
 
-
 @exchange_router.post("/convert")
 async def convert(request: ConvertRequest):
     ...
