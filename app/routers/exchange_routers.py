@@ -13,7 +13,7 @@ async def get_last_db_update(session: AsyncSession = Depends(get_session)):
     new_currency = ExchangeCurrency(
         currency_name="Рубль",
         currency_symbol="RUB",
-        currency_price="100"
+        currency_price=100.4
     )
     session.add(new_currency)
     await session.commit()

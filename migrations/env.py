@@ -12,7 +12,7 @@ from app.models.exchange_models import ExchangeCurrency
 
 config = context.config
 section = config.config_ini_section
-config.set_section_option(section, "DB_URL", os.environ.get("DB_URL"))
+config.set_section_option(section, "DB_URL", os.environ.get("DB_URL_ALEMBIC"))
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
