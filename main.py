@@ -2,7 +2,6 @@ from fastapi import FastAPI
 import uvicorn
 
 from app.routers import api
-from app.jobs.update_job import celery_app
 from settings.config import ConfigService
 
 app = FastAPI()

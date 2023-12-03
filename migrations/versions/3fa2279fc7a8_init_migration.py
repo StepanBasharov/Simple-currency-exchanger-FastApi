@@ -23,7 +23,7 @@ def upgrade() -> None:
     op.create_table('currency',
                     sa.Column('id', sa.INTEGER(), nullable=False),
                     sa.Column('currency_name', sa.String(
-                        length=30), nullable=True),
+                        length=100), nullable=True),
                     sa.Column('currency_symbol', sa.String(
                         length=3), nullable=True),
                     sa.Column('currency_price', sa.Float(), nullable=True),
