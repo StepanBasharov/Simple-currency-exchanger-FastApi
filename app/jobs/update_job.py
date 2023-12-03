@@ -19,7 +19,7 @@ celery_app = Celery(
 celery_app.conf.beat_schedule = {
     "run-periodic-task": {
         "task": "app.jobs.update_job.update_currency",
-        "schedule": schedule(run_every=5)
+        "schedule": schedule(run_every=60)
     }
 }
 
