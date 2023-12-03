@@ -21,4 +21,4 @@ class LastUpdateResponse(CommonResponse):
 
 
 class ConvertResponse(CommonResponse):
-    result: float
+    result: float | None

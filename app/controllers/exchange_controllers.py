@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -36,7 +36,7 @@ class ExchangeControllers:
             currency_from: str,
             currency_to: str,
             amount: float
-    ) -> ConvertResponse:
+    ) -> Optional[ConvertResponse, None]:
         # Находим в базе первую и вторую валюты
         query = select(ExchangeCurrency).where(
             ExchangeCurrency.currency_symbol == currency_from)
@@ -47,7 +47,11 @@ class ExchangeControllers:
         result = await session.execute(query)
         currency_to_price = result.scalars().first()
         # По формуле вычисляем цену (from + amount / to)
-        result = currency_from_price.currency_price + \
-            amount / currency_to_price.currency_price
-        # Возвращаем результат
-        return ConvertResponse(result=result)
+        if currency_to_price.currency_price and currency_from_price.currency_price:
+            result = currency_from_price.currency_price + \
+                amount / currency_to_price.currency_price
+            # Возвращаем результат
+            return ConvertResponse(result=result)
+        else:
+            return None
+
