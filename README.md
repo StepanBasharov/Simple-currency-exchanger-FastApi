@@ -8,6 +8,8 @@
 <li>Alembic</li>
 <li>Postgresql</li>
 <li>Docker-compose</li>
+<li>Celery</li>
+<li>Httpx</li>
 </ul>
 
 <h2>Деплой</h2>
