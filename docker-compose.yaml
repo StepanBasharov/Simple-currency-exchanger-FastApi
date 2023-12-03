@@ -23,8 +23,6 @@ services:
 
   redis:
     image: redis
-    ports:
-      - "6379:6379"
 
   celery-worker:
     build:
@@ -33,5 +31,5 @@ services:
     depends_on:
       - db
     environment:
-      - BROKER_URL=redis://redis:6379/0
-      - RESULT_BACKEND=redis://redis:6379/0
+      - BROKER_URL=redis://redis
+      - RESULT_BACKEND=redis://redis

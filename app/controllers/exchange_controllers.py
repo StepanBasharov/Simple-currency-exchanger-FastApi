@@ -1,4 +1,5 @@
 from typing import List, Optional
+from logging import error
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -47,10 +48,11 @@ class ExchangeControllers:
         result = await session.execute(query)
         currency_to_price = result.scalars().first()
         # По формуле вычисляем цену (from / to * amount)
-        if currency_to_price.currency_price and currency_from_price.currency_price:
+        try:
             result = currency_from_price.currency_price / currency_to_price.currency_price * amount
             print(result)
             # Возвращаем результат
             return ConvertResponse(result=result)
-        else:
+        except Exception as e:
+            error(e)
             return ConvertResponse(result=None)
