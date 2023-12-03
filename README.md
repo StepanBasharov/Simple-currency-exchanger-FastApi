@@ -30,6 +30,6 @@ DB_SYNC_URL="postgresql://postgres:postgres@db/exchange_db"
 </code>
 <br>
 <li>Запустите команду <code>docker-compose up --build -d</code></li>
-<li>Запустите команду <code>alembic upgrade head</code></li>
+
 
 <h4>Сервис полностью готов к работе :)</h4>
