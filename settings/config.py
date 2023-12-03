@@ -18,6 +18,7 @@ class ConfigCelery:
     BROKER = os.getenv("BROKER_URL")
     BACKEND = os.getenv("RESULT_BACKEND")
 
+
 class ConfigExchangeApi:
     API_KEY = os.getenv("API_KEY")
     PRICES_URL = os.getenv("PRICES_URL")

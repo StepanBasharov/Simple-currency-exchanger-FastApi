@@ -27,14 +27,16 @@ celery_app.conf.beat_schedule = {
 @shared_task
 def update_currency():
     client = Client()
-    response_get_price = client.get(f"{ConfigExchangeApi.PRICES_URL}{ConfigExchangeApi.API_KEY}")
+    response_get_price = client.get(
+        f"{ConfigExchangeApi.PRICES_URL}{ConfigExchangeApi.API_KEY}")
     response_get_names = client.get(ConfigExchangeApi.NAMES_URL)
     prices = response_get_price.json()["rates"]
     names = response_get_names.json()
 
     with Session() as session:
         for symbol in prices:
-            query = select(ExchangeCurrency).where(ExchangeCurrency.currency_symbol == symbol)
+            query = select(ExchangeCurrency).where(
+                ExchangeCurrency.currency_symbol == symbol)
             result = session.execute(query)
             currency = result.scalars().first()
 
@@ -64,4 +66,3 @@ def update_currency():
                     session.add(new_currency)
         session.commit()
         print("Done")
-
