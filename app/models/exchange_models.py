@@ -19,5 +19,4 @@ class ExchangeCurrency(Base):
     currency_symbol = Column(String(3))
     currency_price = Column(Float)
     created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow,
-                        onupdate=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

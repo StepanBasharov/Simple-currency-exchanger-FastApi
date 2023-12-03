@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from celery import shared_task
 from httpx import Client
 from sqlalchemy import select
@@ -53,25 +55,29 @@ def update_currency():
                 try:
                     currency.currency_symbol = symbol
                     currency.currency_price = float(prices[symbol])
-                    currency.currency_name = names.get(symbol, "Undefined")
+                    currency.currency_name = names.get(symbol, "Undefined"),
+                    currency.updated_at=datetime.utcnow()
                 except KeyError:
                     currency.currency_symbol = symbol
                     currency.currency_price = float(prices[symbol])
-                    currency.currency_name = "Undefined"
+                    currency.currency_name = "Undefined",
+                    currency.updated_at=datetime.utcnow()
             else:
                 # Если нет - добавляем
                 try:
                     new_currency = ExchangeCurrency(
                         currency_symbol=symbol,
                         currency_price=float(prices[symbol]),
-                        currency_name=names.get(symbol, "Undefined")
+                        currency_name=names.get(symbol, "Undefined"),
+                        updated_at=datetime.utcnow()
                     )
                     session.add(new_currency)
                 except KeyError:
                     new_currency = ExchangeCurrency(
                         currency_symbol=symbol,
                         currency_price=float(prices[symbol]),
-                        currency_name="Undefined"
+                        currency_name="Undefined",
+                        updated_at=datetime.utcnow()
                     )
                     session.add(new_currency)
         # Комитим изменения
