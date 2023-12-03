@@ -8,6 +8,7 @@ from sqlalchemy import select
 from app.utils.database_sync import Session
 from app.models.exchange_models import ExchangeCurrency
 from settings.config import ConfigCelery, ConfigExchangeApi
+from settings.constants import WAIT_IN_SECONDS_PERIODIC_TASK
 
 
 celery_app = Celery(
@@ -19,13 +20,16 @@ celery_app = Celery(
 celery_app.conf.beat_schedule = {
     "run-periodic-task": {
         "task": "app.jobs.update_job.update_currency",
-        "schedule": schedule(run_every=60)
+        "schedule": schedule(run_every=WAIT_IN_SECONDS_PERIODIC_TASK)
     }
 }
 
 
 @shared_task
 def update_currency():
+    """ Фоновая периодическая синхронная задача обновляющая курс"""
+
+    # Инициализируем клиента и делаем запрос
     client = Client()
     response_get_price = client.get(
         f"{ConfigExchangeApi.PRICES_URL}{ConfigExchangeApi.API_KEY}")
@@ -33,14 +37,18 @@ def update_currency():
     prices = response_get_price.json()["rates"]
     names = response_get_names.json()
 
+    # Открываем соединение с базой данных
     with Session() as session:
+        # Проходимся по полученным валютам
         for symbol in prices:
+            # Проверяем существует ли валюта в базе
             query = select(ExchangeCurrency).where(
                 ExchangeCurrency.currency_symbol == symbol)
             result = session.execute(query)
             currency = result.scalars().first()
 
             if currency:
+                # Если валюта существует мы ее обновляем
                 try:
                     currency.currency_symbol = symbol
                     currency.currency_price = float(prices[symbol])
@@ -50,6 +58,7 @@ def update_currency():
                     currency.currency_price = float(prices[symbol])
                     currency.currency_name = "Undefined"
             else:
+                # Если нет - добавляем
                 try:
                     new_currency = ExchangeCurrency(
                         currency_symbol=symbol,
@@ -64,5 +73,6 @@ def update_currency():
                         currency_name="Undefined"
                     )
                     session.add(new_currency)
+        # Комитим изменения
         session.commit()
-        print("Done")
+

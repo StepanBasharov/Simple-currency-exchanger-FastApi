@@ -14,9 +14,12 @@ class ExchangeControllers:
     @staticmethod
     async def get_last_updates(session: AsyncSession) -> List[CurrencyLastUpdate]:
         updates = []
+        # Получаем все валюты из бд
         query = select(ExchangeCurrency)
         result = await session.execute(query)
         currency = result.scalars().all()
+        # Проходимя по валютам добавляя в список хеш-мапу
+        # состоящую из кода валюты и даты ее обновления
         for symbol in currency:
             updates.append(
                 CurrencyLastUpdate(
@@ -24,6 +27,7 @@ class ExchangeControllers:
                     last_update=symbol.updated_at
                 )
             )
+        # Возвращаем лист
         return updates
 
     @staticmethod
@@ -33,6 +37,7 @@ class ExchangeControllers:
             currency_to: str,
             amount: float
     ) -> ConvertResponse:
+        # Находим в базе первую и вторую валюты
         query = select(ExchangeCurrency).where(
             ExchangeCurrency.currency_symbol == currency_from)
         result = await session.execute(query)
@@ -41,6 +46,8 @@ class ExchangeControllers:
             ExchangeCurrency.currency_symbol == currency_to)
         result = await session.execute(query)
         currency_to_price = result.scalars().first()
+        # По формуле вычисляем цену (from + amount / to)
         result = currency_from_price.currency_price + \
             amount / currency_to_price.currency_price
+        # Возвращаем результат
         return ConvertResponse(result=result)
