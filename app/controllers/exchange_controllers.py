@@ -36,7 +36,7 @@ class ExchangeControllers:
             currency_from: str,
             currency_to: str,
             amount: float
-    ) -> Optional[ConvertResponse, None]:
+    ) -> ConvertResponse:
         # Находим в базе первую и вторую валюты
         query = select(ExchangeCurrency).where(
             ExchangeCurrency.currency_symbol == currency_from)
@@ -46,12 +46,11 @@ class ExchangeControllers:
             ExchangeCurrency.currency_symbol == currency_to)
         result = await session.execute(query)
         currency_to_price = result.scalars().first()
-        # По формуле вычисляем цену (from + amount / to)
+        # По формуле вычисляем цену (from / to * amount)
         if currency_to_price.currency_price and currency_from_price.currency_price:
-            result = currency_from_price.currency_price + \
-                amount / currency_to_price.currency_price
+            result = currency_from_price.currency_price / currency_to_price.currency_price * amount
+            print(result)
             # Возвращаем результат
             return ConvertResponse(result=result)
         else:
-            return None
-
+            return ConvertResponse(result=None)
