@@ -29,7 +29,7 @@ services:
   celery-worker:
     build:
       context: .
-    command: celery -A celery_app worker --loglevel=info
+    command: celery -A app.jobs.update_job.celery_app worker --loglevel=info
     depends_on:
       - db
     environment:
