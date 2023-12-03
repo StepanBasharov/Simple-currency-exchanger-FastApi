@@ -1,15 +1,16 @@
-import asyncio
-
-from celery import Celery, shared_task
-from celery.schedules import schedule
+from celery import shared_task
 from httpx import Client
 from sqlalchemy import select
 
 from app.utils.database_sync import Session
 from app.models.exchange_models import ExchangeCurrency
-from settings.config import ConfigCelery, ConfigExchangeApi
-from settings.constants import WAIT_IN_SECONDS_PERIODIC_TASK
+from settings.config import ConfigExchangeApi
 
+from celery import Celery
+from celery.schedules import schedule
+
+from settings.config import ConfigCelery
+from settings.constants import WAIT_IN_SECONDS_PERIODIC_TASK
 
 celery_app = Celery(
     'jobs',
@@ -18,7 +19,7 @@ celery_app = Celery(
 )
 
 celery_app.conf.beat_schedule = {
-    "run-periodic-task": {
+    "update-currency": {
         "task": "app.jobs.update_job.update_currency",
         "schedule": schedule(run_every=WAIT_IN_SECONDS_PERIODIC_TASK)
     }
@@ -75,4 +76,3 @@ def update_currency():
                     session.add(new_currency)
         # Комитим изменения
         session.commit()
-
