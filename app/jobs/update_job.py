@@ -12,15 +12,7 @@ celery_app = Celery(
     backend=ConfigCelery.BACKEND
 )
 
-celery_app.conf.beat_schedule = {
-    "run-periodic-task": {
-        "task": "app.jobs.update_job.update_currency",
-        "schedule": schedule(run_every=10)
-    }
-}
-
-
-@shared_task()
+@shared_task
 def update_currency():
     print("ROOOOB")
     client = Client()
