@@ -33,3 +33,8 @@ DB_SYNC_URL="postgresql://postgres:postgres@db/exchange_db"
 
 
 <h4>Сервис полностью готов к работе :)</h4>
+
+
+<h2>Тестирование</h2>
+
+Для запуска unit тестов в корневой папке запустить <code>pytest</code> 
