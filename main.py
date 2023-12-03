@@ -9,9 +9,7 @@ app = FastAPI()
 
 app.include_router(api)
 
-# @app.on_event("startup")
-# async def start_up():
-#    celery_app.send_task("jobs.update_job.update_currency")
+
 
 if __name__ == "__main__":
     uvicorn.run(

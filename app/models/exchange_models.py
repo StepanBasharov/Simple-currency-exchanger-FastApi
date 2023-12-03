@@ -8,7 +8,7 @@ from sqlalchemy import (
     INTEGER
 )
 
-from app.utils.database import Base
+from app.utils.database_async import Base
 
 
 class ExchangeCurrency(Base):

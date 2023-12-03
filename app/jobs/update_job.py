@@ -2,7 +2,7 @@ from celery import Celery, shared_task
 from celery.schedules import schedule
 from httpx import Client
 
-from app.utils.database import get_session
+from app.utils.database_async import get_session
 from app.models.exchange_models import ExchangeCurrency
 from settings.config import ConfigCelery, ConfigExchangeApi
 

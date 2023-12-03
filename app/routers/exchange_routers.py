@@ -4,7 +4,7 @@ from sqlalchemy.future import select
 
 from app.schemas.exchange_schemas import ConvertRequest
 from app.models.exchange_models import ExchangeCurrency
-from app.utils.database import get_session
+from app.utils.database_async import get_session
 
 exchange_router = APIRouter(prefix="/exchange")
 
