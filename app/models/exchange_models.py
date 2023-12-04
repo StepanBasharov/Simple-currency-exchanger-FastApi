@@ -5,8 +5,9 @@ from sqlalchemy import (
     String,
     Float,
     DateTime,
-    INTEGER
+    INTEGER, select
 )
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.utils.database_async import Base
 
@@ -20,3 +21,4 @@ class ExchangeCurrency(Base):
     currency_price = Column(Float)
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
